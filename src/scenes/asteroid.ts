@@ -4,6 +4,7 @@ import Sprite = Phaser.GameObjects.Sprite;
 import ParticleEmitter = Phaser.GameObjects.Particles.ParticleEmitter;
 import WebAudioSound = Phaser.Sound.WebAudioSound;
 import {ExplosionController} from "./explosion";
+import {ScoreController} from "./score";
 
 
 export class Asteroid {
@@ -12,7 +13,8 @@ export class Asteroid {
     private engineSound: WebAudioSound;
 
 
-    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public source: Vector2, public target: Vector2) {
+    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public scoreController: ScoreController,
+                       public source: Vector2, public target: Vector2) {
         const dx = target.x - source.x;
         const dy = target.y - source.y;
         const direction = new Phaser.Math.Vector2(dx / 10, dy / 10);
@@ -55,6 +57,7 @@ export class Asteroid {
             let isHit = false;
             if (this.explosionController.isHit(location)) {
                 isHit = true;
+                this.scoreController.notifyAsteriodDestroy();
             }
 
             if (isHit || this.sprite.y >= this.scene.game.canvas.height - 100) {
@@ -69,6 +72,7 @@ export class Asteroid {
                 if (isHit) {
                     this.explosionController.explode(new Vector2(this.sprite.x, this.sprite.y), 1, 0.98, 0xffa080, 0);
                 } else {
+                    this.scoreController.notifyAsteriodExploded();
                     this.explosionController.explode(new Vector2(this.sprite.x, this.sprite.y), 10, 0.99, 0xff8000, 0.1);
                 }
                 this.exploded = true;
@@ -80,7 +84,7 @@ export class Asteroid {
 export class AsteroidController {
     private asteriods: Asteroid[] = [];
 
-    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController) {
+    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public scoreController: ScoreController) {
     }
 
     preload() {
@@ -99,6 +103,6 @@ export class AsteroidController {
     }
 
     public createAsteriod(source: Vector2, target: Vector2) {
-        this.asteriods.push(new Asteroid(this.scene, this.explosionController, source, target));
+        this.asteriods.push(new Asteroid(this.scene, this.explosionController, this.scoreController, source, target));
     }
 }

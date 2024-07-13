@@ -3,6 +3,7 @@ import Vector2 = Phaser.Math.Vector2;
 import {MissileController} from "./missile";
 import {AsteroidController} from "./asteroid";
 import {ExplosionController} from "./explosion";
+import {ScoreController} from "./score";
 
 
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
@@ -15,13 +16,14 @@ export class MissileTestScene extends Phaser.Scene {
     private explosionController: ExplosionController;
     private missileController: MissileController;
     private asteriodController: AsteroidController;
+    private scoreController: ScoreController = new ScoreController();
     private text: Text;
 
     constructor () {
         super(sceneConfig);
         this.explosionController = new ExplosionController(this);
         this.missileController = new MissileController(this, this.explosionController);
-        this.asteriodController = new AsteroidController(this, this.explosionController);
+        this.asteriodController = new AsteroidController(this, this.explosionController, this.scoreController);
     }
 
     preload () {
@@ -60,7 +62,7 @@ export class MissileTestScene extends Phaser.Scene {
     }
 
     public update() {
-        this.text.text = ``;
+        this.text.text = this.scoreController.toString();
 
         this.explosionController.update();
         this.missileController.update();
@@ -72,10 +74,12 @@ export class MissileTestScene extends Phaser.Scene {
     }
 
     private launchMissile(x: number, y: number) {
+        this.scoreController.notifyMissileLaunched();
         this.missileController.createMissile(new Vector2(this.game.canvas.width / 2.0, this.game.canvas.height - 20), new Vector2(x, y));
     }
 
     private dropAsteroid() {
+        this.scoreController.notifyAsteriodDropped();
         const sourceX = Phaser.Math.Between(- 0.1 * this.game.canvas.width, 1.1 * this.game.canvas.width);
         const targetX = Phaser.Math.Between(0.1 * this.game.canvas.width, 0.9 * this.game.canvas.width);
         this.asteriodController.createAsteriod(new Vector2(sourceX, 0), new Vector2(targetX, this.game.canvas.height - 20));

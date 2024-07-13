@@ -1,5 +1,7 @@
 # Coding for Fun Project - mal schnell die Welt ret'n
 
+A very simple armageddon game known from Sinclair ZX Spectrum.
+
 # Resources
 
 * https://opengameart.org/content/rockbreaking
