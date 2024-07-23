@@ -45,7 +45,7 @@ export class Explosion {
 
     public isHit(location: Vector2): boolean {
         if (this.isActive()) {
-            return this.location.distance(location) < 20;
+            return this.location.distance(location) < this.intensity * 20; // 20;
         }
         return false;
     }
