@@ -1,12 +1,18 @@
 
 export class ScoreController {
-    private asteriodsDestroid: number = 0;
+    private asteriodsDestroyed: number = 0;
     private asteriodsExploded: number = 0;
     private missiles: number = 0;
     private asteriods: number = 0;
+    private buildings: number = 0;
+    private buildingsDestroyed: number = 0;
 
     public notifyAsteriodDestroy() {
-        this.asteriodsDestroid++;
+        this.asteriodsDestroyed++;
+    }
+
+    public notifyBuildingDestroy() {
+        this.buildingsDestroyed++;
     }
 
     public notifyAsteriodExploded() {
@@ -22,6 +28,10 @@ export class ScoreController {
     }
 
     public toString() {
-        return `Destroyed: ${this.asteriodsDestroid}\nExplosions: ${this.asteriodsExploded}\nMissiles: ${this.missiles}`;
+        return `Destroyed: ${this.asteriodsDestroyed}\nExplosions: ${this.asteriodsExploded}\nMissiles: ${this.missiles}\nBuildings: ${this.buildings}/${this.buildingsDestroyed}`;
+    }
+
+    addBuilding() {
+        this.buildings++;
     }
 }

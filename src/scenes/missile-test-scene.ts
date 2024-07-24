@@ -53,10 +53,13 @@ export class MissileTestScene extends Phaser.Scene {
         const frames = ["building-1", "building-2", "building-3", "building-4"];
         // const frames = ["fan-1", "fan-2", "fan-3", "fan-4", "fan-5", "fan-6", "fan-7", "fan-8"];
 
-        for (let index = 0; index < 30; index++) {
+        for (let index = 1; index < this.game.canvas.width / 120 - 1; index++) {
 //            const s1 = this.add.sprite(index * 120, this.game.canvas.height, "atlas-1", frames[index % frames.length]);
 //            const fan = this.add.sprite(index * 120 + 90, this.game.canvas.height - 60, "fan").play("fan-screw")
             // this.add.sprite(index * 120 + 60, this.game.canvas.height - 30, "fan", frames[index % frames.length]);
+            this.buildingController.createBuilding(new Vector2(index * 120 + 10, this.game.canvas.height - 120));
+            this.buildingController.createBuilding(new Vector2(index * 120 + 30, this.game.canvas.height - 90));
+            this.buildingController.createBuilding(new Vector2(index * 120 + 60, this.game.canvas.height - 60));
             this.buildingController.createBuilding(new Vector2(index * 120, this.game.canvas.height - 30));
         }
 
@@ -82,13 +85,13 @@ export class MissileTestScene extends Phaser.Scene {
         this.asteriodController.create();
     }
 
-    public update() {
+    public update(time: number, delta: number) {
         this.text.text = this.scoreController.toString();
 
         this.explosionController.update();
         this.missileController.update();
         this.asteriodController.update();
-        this.buildingController.update();
+        this.buildingController.update(time, delta);
 
         if (Math.random() < 0.001) {
             this.dropAsteroid();
