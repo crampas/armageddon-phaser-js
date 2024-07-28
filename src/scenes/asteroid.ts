@@ -79,12 +79,16 @@ export class Asteroid {
             }
         }
     }
+
+    isActive() {
+        return !this.exploded;
+    }
 }
 
 export class AsteroidController {
     private asteriods: Asteroid[] = [];
 
-    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public scoreController: ScoreController) {
+    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public scoreController: ScoreController, public maxAsteroids: number) {
     }
 
     preload() {
@@ -103,6 +107,14 @@ export class AsteroidController {
     }
 
     public createAsteriod(source: Vector2, target: Vector2) {
-        this.asteriods.push(new Asteroid(this.scene, this.explosionController, this.scoreController, source, target));
+        if (this.asteriods.length < this.maxAsteroids) {
+            this.asteriods.push(new Asteroid(this.scene, this.explosionController, this.scoreController, source, target));
+            return true;
+        }
+        return false;
+    }
+
+    public countActive() {
+        return this.asteriods.reduce((count, asteroid) => count + (asteroid.isActive() ? 1 : 0), 0);
     }
 }

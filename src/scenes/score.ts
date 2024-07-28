@@ -34,4 +34,8 @@ export class ScoreController {
     addBuilding() {
         this.buildings++;
     }
+
+    isGameOver() {
+        return this.buildingsDestroyed >= this.buildings;
+    }
 }

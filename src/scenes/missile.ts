@@ -1,10 +1,12 @@
 import Vector2 = Phaser.Math.Vector2;
 import {ExplosionController} from "./explosion";
+import {ScoreController} from "./score";
 
 
 export class Missile {
     public sprite: Phaser.Physics.Arcade.Sprite;
     private exploded = false;
+    private explodeCallback: () => void;
 
     constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public source: Vector2, public target: Vector2) {
         this.sprite = this.scene.physics.add.sprite(source.x, source.y, 'missile-1');
@@ -23,6 +25,9 @@ export class Missile {
                 this.sprite = null;
                 this.explosionController.explode(location, 1, 0.99, 0xa0a0ff, 0);
                 this.exploded = true;
+                if (this.explodeCallback) {
+                    this.explodeCallback();
+                }
             }
         }
     }
@@ -30,12 +35,16 @@ export class Missile {
     public isActive(): boolean {
         return this.sprite != null;
     }
+
+    public onExplode(callback: () => void) {
+        this.explodeCallback = callback;
+    }
 }
 
 export class MissileController {
     private missiles: Missile[] = [];
 
-    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController) {
+    public constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public scoreController: ScoreController) {
     }
 
     preload() {
@@ -56,8 +65,12 @@ export class MissileController {
     }
 
     public createMissile(source: Vector2, target: Vector2) {
-        if (this.missiles.length < 3) {
-            this.missiles.push(new Missile(this.scene, this.explosionController, source, target));
+        if (this.missiles.length < 1) {
+            this.scoreController.notifyMissileLaunched();
+            const missile = new Missile(this.scene, this.explosionController, source, target);
+            this.missiles.push(missile);
+            return missile;
         }
+        return null;
     }
 }

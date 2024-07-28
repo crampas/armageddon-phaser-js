@@ -1,6 +1,9 @@
 import PointLight = Phaser.GameObjects.PointLight;
 import Vector2 = Phaser.Math.Vector2;
 import WebAudioSound = Phaser.Sound.WebAudioSound;
+import Circle = Phaser.Geom.Circle;
+import Rectangle = Phaser.Geom.Rectangle;
+import CircleToRectangle = Phaser.Geom.Intersects.CircleToRectangle;
 
 
 export class Explosion {
@@ -49,6 +52,16 @@ export class Explosion {
         }
         return false;
     }
+
+    public hitRect(rect: Rectangle): boolean {
+        if (this.isActive()) {
+            const exploseionArea = new Circle(this.location.x, this.location.y, this.intensity * 20);
+            return CircleToRectangle(exploseionArea, rect);
+        }
+        return false;
+    }
+
+
 }
 
 
@@ -83,4 +96,9 @@ export class ExplosionController {
     isHit(location: Phaser.Math.Vector2): boolean {
         return this.explosions.reduce((hit, explosion) => hit || explosion.isHit(location), false);
     }
+
+    public hitRect(rect: Rectangle): boolean {
+        return this.explosions.reduce((hit, explosion) => hit || explosion.hitRect(rect), false);
+    }
+
 }
