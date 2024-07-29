@@ -7,6 +7,14 @@ export class ScoreController {
     private buildings: number = 0;
     private buildingsDestroyed: number = 0;
 
+    public getScore() {
+        return 100 * (this.buildings - this.buildingsDestroyed);
+    }
+
+    public getBuildingsLeft() {
+        return this.buildings - this.buildingsDestroyed;
+    }
+
     public notifyAsteriodDestroy() {
         this.asteriodsDestroyed++;
     }

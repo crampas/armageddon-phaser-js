@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import scenes from './scenes';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
-  title: 'Leaf Blower JS',
+  title: 'Armageddon Phaser JS',
  
   type: Phaser.AUTO,
  
@@ -19,7 +19,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
- 
+
   parent: 'game',
   backgroundColor: '#000030',
 };

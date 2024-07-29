@@ -8,6 +8,7 @@ import CircleToRectangle = Phaser.Geom.Intersects.CircleToRectangle;
 
 export class Explosion {
     private lights: PointLight[] = [];
+
     private explosionSound: WebAudioSound;
 
     public constructor(public scene: Phaser.Scene, public location: Vector2, public intensity: number, public reduction: number,

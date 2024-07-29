@@ -3,25 +3,30 @@ import {ExplosionController} from "./explosion";
 import {ScoreController} from "./score";
 
 
-export class Missile {
+export class Missile  {
     public sprite: Phaser.Physics.Arcade.Sprite;
     private exploded = false;
     private explodeCallback: () => void;
+    private velocity: Vector2;
 
     constructor(public scene: Phaser.Scene, public explosionController: ExplosionController, public source: Vector2, public target: Vector2) {
         this.sprite = this.scene.physics.add.sprite(source.x, source.y, 'missile-1');
         const direction = new Vector2(target).subtract(source);
-        const velocity = direction.normalize().scale(300);
+        this.velocity = direction.normalize().scale(300);
         this.sprite.setRotation(direction.angle() + Math.PI / 2.0);
-        this.sprite.setVelocityX(velocity.x);
-        this.sprite.setVelocityY(velocity.y);
+        this.sprite.setVelocityX(this.velocity.x);
+        this.sprite.setVelocityY(this.velocity.y);
     }
 
-    public update(): void {
-        if (this.sprite) {
+    public update(time: number): void {
+        if (!this.exploded) {
+            this.velocity = this.velocity.scale(1.005);
+            this.sprite.setVelocityX(this.velocity.x);
+            this.sprite.setVelocityY(this.velocity.y);
+
             const location = new Vector2(this.sprite.x, this.sprite.y);
             if (location.distance(this.target) < 10.0) {
-                this.sprite.destroy();
+                this.sprite.destroy(true);
                 this.sprite = null;
                 this.explosionController.explode(location, 1, 0.99, 0xa0a0ff, 0);
                 this.exploded = true;
@@ -54,8 +59,8 @@ export class MissileController {
     public create(): void {
     }
 
-    public update(): void {
-        this.missiles.forEach(missile => missile.update());
+    public update(time: number): void {
+        this.missiles.forEach(missile => missile.update(time));
         this.missiles = this.missiles.reduce<Missile[]>((active, explosion) => {
             if (explosion.isActive()) {
                 return [...active, explosion];

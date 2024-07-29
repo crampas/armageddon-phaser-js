@@ -1,4 +1,3 @@
-import { LightTestScene } from './light-test-scene';
-import {MissileTestScene} from "./missile-test-scene";
+import {MissileScene} from "./missile-scene";
 
-export default [MissileTestScene, LightTestScene];
+export default [MissileScene];
